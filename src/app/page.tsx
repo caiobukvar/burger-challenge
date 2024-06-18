@@ -60,6 +60,7 @@ export default function Home() {
 
         {loading && <p>Loading...</p>}
         {error && <p>Error: {error}</p>}
+
         {venueData && <MenuNavigation venue={venueData} />}
         {venueData && <Menu venue={venueData} />}
       </div>

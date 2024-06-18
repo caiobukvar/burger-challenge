@@ -27,7 +27,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/Menu/index.jsx",
-    "src/components/Header/index.jsx"
+    "src/components/Header/index.jsx",
+    "src/components/ChevronUp/index.jsx"
   ],
   "exclude": ["node_modules"]
 }
