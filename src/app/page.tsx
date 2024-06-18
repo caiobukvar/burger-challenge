@@ -1,21 +1,18 @@
-import Image from "next/image";
+/* eslint-disable react/jsx-no-undef */
 import Header from "./components/Header";
-import BannerSmall from "@/assets/images/banner-small.png";
-import BannerLarge from "@/assets/images/banner-large.png";
+import Banner from "./components/Banner";
+import MenuSearchInput from "./components/MenuSearchInput";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
       <Header />
-      <div className="relative w-full h-64">
-        <picture>
-          <source srcSet={BannerLarge.src} media="(min-width: 1024px)" />
-          <img
-            src={BannerSmall.src}
-            alt="Banner"
-            className="w-full h-[150px]"
-          />
-        </picture>
+      <Banner />
+
+      <div className="flex flex-col w-full p-4">
+        <MenuSearchInput />
+        {/* premade filters (burgers/drinks/desserts) */}
+        {/* full menu */}
       </div>
     </main>
   );
