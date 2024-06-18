@@ -4,21 +4,27 @@ import Burgers from "@/assets/images/nav-burger.png";
 import Drinks from "@/assets/images/nav-drinks.png";
 import Desserts from "@/assets/images/nav-desserts.png";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentMenuTab } from "@/app/store/reducers/menuTabReducer";
+import { RootState } from "@/app/store/store";
 
 export default function MenuNavigation() {
-  const [currentMenuTab, setCurrentMenuTab] = useState("burgers");
+  const currentTab = useSelector((state: RootState) => state.currentMenuTab);
+  const dispatch = useDispatch();
 
   return (
     <div className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] ">
       <button
         className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentMenuTab === "burgers" && "venue webSettings primaryColour"
+          currentTab.currentMenuTab === "burgers" &&
+          "venue webSettings primaryColour"
         }`}
-        onClick={() => setCurrentMenuTab("burgers")}
+        onClick={() => dispatch(setCurrentMenuTab("burgers"))}
       >
         <div
           className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentMenuTab === "burgers" && "venue webSettings primaryColour"
+            currentTab.currentMenuTab === "burgers" &&
+            "venue webSettings primaryColour"
           }`}
         >
           <Image
@@ -36,13 +42,15 @@ export default function MenuNavigation() {
 
       <button
         className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentMenuTab === "drinks" && "venue webSettings primaryColour"
+          currentTab.currentMenuTab === "drinks" &&
+          "venue webSettings primaryColour"
         }`}
-        onClick={() => setCurrentMenuTab("drinks")}
+        onClick={() => dispatch(setCurrentMenuTab("drinks"))}
       >
         <div
           className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentMenuTab === "drinks" && "venue webSettings primaryColour"
+            currentTab.currentMenuTab === "drinks" &&
+            "venue webSettings primaryColour"
           }`}
         >
           <Image
@@ -60,13 +68,15 @@ export default function MenuNavigation() {
 
       <button
         className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentMenuTab === "desserts" && "venue webSettings primaryColour"
+          currentTab.currentMenuTab === "desserts" &&
+          "venue webSettings primaryColour"
         }`}
-        onClick={() => setCurrentMenuTab("desserts")}
+        onClick={() => dispatch(setCurrentMenuTab("desserts"))}
       >
         <div
           className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentMenuTab === "desserts" && "venue webSettings primaryColour"
+            currentTab.currentMenuTab === "desserts" &&
+            "venue webSettings primaryColour"
           }`}
         >
           <Image
