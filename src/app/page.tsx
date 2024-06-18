@@ -2,6 +2,7 @@
 import Header from "./components/Header";
 import Banner from "./components/Banner";
 import MenuSearchInput from "./components/MenuSearchInput";
+import MenuNavigation from "./components/MenuNavigation";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
 
       <div className="flex flex-col w-full p-4">
         <MenuSearchInput />
-        {/* premade filters (burgers/drinks/desserts) */}
+        <MenuNavigation />
         {/* full menu */}
       </div>
     </main>
