@@ -1,9 +1,13 @@
 import Image from "next/image";
 import MenuIcon from "@/assets/images/menu-icon.svg";
+import "@/app/globals.scss";
 
 export default function Header() {
   return (
-    <div className="flex justify-between px-4 items-center min-w-full h-16 bg-[#4F372F] text-white">
+    <div
+      className="flex justify-between px-4 items-center min-w-full
+      h-16 text-white venue webSettings navBackgroundColour"
+    >
       <div className="size-[28px]" />
 
       <div>
