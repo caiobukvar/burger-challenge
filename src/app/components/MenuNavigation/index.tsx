@@ -9,9 +9,9 @@ export default function MenuNavigation() {
   const [currentMenuTab, setCurrentMenuTab] = useState("burgers");
 
   return (
-    <div className="flex flex-row justify-between px-4 py-5 items-center ">
+    <div className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] ">
       <button
-        className={`flex flex-col items-center border-b-2 border-transparent ${
+        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
           currentMenuTab === "burgers" && "venue webSettings primaryColour"
         }`}
         onClick={() => setCurrentMenuTab("burgers")}
@@ -35,7 +35,7 @@ export default function MenuNavigation() {
       </button>
 
       <button
-        className={`flex flex-col items-center border-b-2 border-transparent ${
+        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
           currentMenuTab === "drinks" && "venue webSettings primaryColour"
         }`}
         onClick={() => setCurrentMenuTab("drinks")}
@@ -59,7 +59,7 @@ export default function MenuNavigation() {
       </button>
 
       <button
-        className={`flex flex-col items-center border-b-2 border-transparent ${
+        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
           currentMenuTab === "desserts" && "venue webSettings primaryColour"
         }`}
         onClick={() => setCurrentMenuTab("desserts")}
