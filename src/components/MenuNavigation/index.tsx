@@ -3,29 +3,35 @@ import Image from "next/image";
 import Burgers from "@/assets/images/nav-burger.png";
 import Drinks from "@/assets/images/nav-drinks.png";
 import Desserts from "@/assets/images/nav-desserts.png";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentMenuTab } from "@/app/store/reducers/menuTabReducer";
-import { RootState } from "@/app/store/store";
+import { setCurrentMenuTab } from "@/store/reducers/menuTabReducer";
+import { RootState } from "@/store/store";
+import { MenuProps } from "@/types/types";
 
-export default function MenuNavigation() {
+const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
   const currentTab = useSelector((state: RootState) => state.currentMenuTab);
   const dispatch = useDispatch();
+
+  const { primaryColour }: any = venue?.webSettings;
 
   return (
     <div className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] ">
       <button
-        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentTab.currentMenuTab === "burgers" &&
-          "venue webSettings primaryColour"
-        }`}
+        className="flex flex-col items-center p-2 border-b-2 border-transparent"
+        style={
+          currentTab.currentMenuTab === "burgers"
+            ? { borderColor: primaryColour }
+            : {}
+        }
         onClick={() => dispatch(setCurrentMenuTab("burgers"))}
       >
         <div
-          className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentTab.currentMenuTab === "burgers" &&
-            "venue webSettings primaryColour"
-          }`}
+          className="rounded-full p-[2px] border-2 border-transparent"
+          style={
+            currentTab.currentMenuTab === "burgers"
+              ? { borderColor: primaryColour }
+              : {}
+          }
         >
           <Image
             src={Burgers}
@@ -41,17 +47,21 @@ export default function MenuNavigation() {
       </button>
 
       <button
-        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentTab.currentMenuTab === "drinks" &&
-          "venue webSettings primaryColour"
-        }`}
+        className="flex flex-col items-center p-2 border-b-2 border-transparent"
+        style={
+          currentTab.currentMenuTab === "drinks"
+            ? { borderColor: primaryColour }
+            : {}
+        }
         onClick={() => dispatch(setCurrentMenuTab("drinks"))}
       >
         <div
-          className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentTab.currentMenuTab === "drinks" &&
-            "venue webSettings primaryColour"
-          }`}
+          className="rounded-full p-[2px] border-2 border-transparent"
+          style={
+            currentTab.currentMenuTab === "drinks"
+              ? { borderColor: primaryColour }
+              : {}
+          }
         >
           <Image
             src={Drinks}
@@ -67,17 +77,21 @@ export default function MenuNavigation() {
       </button>
 
       <button
-        className={`flex flex-col items-center p-2 border-b-2 border-transparent ${
-          currentTab.currentMenuTab === "desserts" &&
-          "venue webSettings primaryColour"
-        }`}
+        className="flex flex-col items-center p-2 border-b-2 border-transparent"
+        style={
+          currentTab.currentMenuTab === "desserts"
+            ? { borderColor: primaryColour }
+            : {}
+        }
         onClick={() => dispatch(setCurrentMenuTab("desserts"))}
       >
         <div
-          className={`rounded-full p-[2px] border-2 border-transparent ${
-            currentTab.currentMenuTab === "desserts" &&
-            "venue webSettings primaryColour"
-          }`}
+          className="rounded-full p-[2px] border-2 border-transparent"
+          style={
+            currentTab.currentMenuTab === "desserts"
+              ? { borderColor: primaryColour }
+              : {}
+          }
         >
           <Image
             src={Desserts}
@@ -93,4 +107,6 @@ export default function MenuNavigation() {
       </button>
     </div>
   );
-}
+};
+
+export default MenuNavigation;

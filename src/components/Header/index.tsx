@@ -1,12 +1,15 @@
 import Image from "next/image";
 import MenuIcon from "@/assets/images/menu-icon.svg";
-import "@/app/globals.scss";
+import { MenuProps } from "@/types/types";
 
-export default function Header() {
+const Header: React.FC<MenuProps> = ({ venue }) => {
+  const bgColor = venue?.webSettings?.navBackgroundColour;
+
   return (
     <div
       className="flex justify-between px-4 items-center min-w-full
-      h-16 text-white venue webSettings navBackgroundColour"
+      h-16 text-white"
+      style={bgColor ? { backgroundColor: bgColor } : {}}
     >
       <div className="size-[28px]" />
 
@@ -19,4 +22,6 @@ export default function Header() {
       </button>
     </div>
   );
-}
+};
+
+export default Header;
