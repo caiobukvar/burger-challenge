@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ChevronUp from "../ChevronUp";
 import ChevronDown from "../ChevronDown";
+import "@/app/globals.css";
 
 const Menu: React.FC<MenuProps> = ({ venue }) => {
   const [menuData, setMenuData] = useState<MenuType | null>();
@@ -68,20 +69,57 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
       {menuData && (
         <div>
           {menuData.sections.map((section) => (
-            <section key={section.id}>
-              <div className="flex justify-between h-[28px] items-center">
-                <p>{section.name}</p>
-                <button onClick={() => toggleSection(section.id)}>
-                  {openSections[section.id] ? (
-                    <ChevronUp color={bgColor} />
-                  ) : (
-                    <ChevronDown color={bgColor} />
-                  )}
-                </button>
-              </div>
+            <section key={section.id} className="flex flex-col gap-8">
+              <button
+                onClick={() => toggleSection(section.id)}
+                className="flex justify-between h-[72px] items-center w-full"
+              >
+                <p className="font-[500] text-[24px] text-[#121212]">
+                  {section.name}
+                </p>
+                {openSections[section.id] ? (
+                  <ChevronUp color={bgColor} />
+                ) : (
+                  <ChevronDown color={bgColor} />
+                )}
+              </button>
               {openSections[section.id] && (
-                <div>
-                  <p>Content for {section.name} goes here</p>
+                <div className="flex flex-col gap-8">
+                  {section.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex justify-between w-full gap-4 max-h-[84px]"
+                    >
+                      <div className="min-h-full ">
+                        <p className="font-[500] text-[16px] text-[#121212]">
+                          {item.name}
+                        </p>
+                        <p className="font-[300] text-[16px] text-[#464646] line-clamp-2 leading-[18.75px]">
+                          {item.description}
+                        </p>
+                        <p className="font-[500] text-[16px] text-[#464646]">
+                          R$ {item.price.toFixed(2)}
+                        </p>
+                      </div>
+
+                      <div className="flex min-w-32 max-h-[84px] justify-center items-center">
+                        {item.images && (
+                          <div>
+                            {item.images.map((image, index) => (
+                              <Image
+                                src={image.image}
+                                key={index}
+                                alt={image.image}
+                                width={128}
+                                height={84}
+                                className="rounded-[4px]"
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </section>

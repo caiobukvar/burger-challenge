@@ -64,6 +64,11 @@ export default function Home() {
         {venueData && <MenuNavigation venue={venueData} />}
         {venueData && <Menu venue={venueData} />}
       </div>
+      <div className="flex flex-col items-center w-full p-6 bg-[#EEEEEE] mt-4">
+        <button className="text-center text-[#4F372F] bg-white rounded-[8px] w-full underline">
+          View allergy information
+        </button>
+      </div>
     </main>
   );
 }
