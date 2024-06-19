@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@reduxjs/toolkit": "^2.2.5",
     "@tailwindcss/line-clamp": "^0.4.4",
     "next": "14.2.4",

@@ -1,13 +1,12 @@
 "use client";
-import Image from "next/image";
 import Burgers from "@/assets/images/nav-burger.png";
-import Drinks from "@/assets/images/nav-drinks.png";
 import Desserts from "@/assets/images/nav-desserts.png";
-import { useDispatch, useSelector } from "react-redux";
+import Drinks from "@/assets/images/nav-drinks.png";
 import { setCurrentMenuTab } from "@/store/reducers/menuTabReducer";
 import { RootState } from "@/store/store";
 import { MenuProps } from "@/types/types";
-import { useRef } from "react";
+import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
 
 const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
   const currentTab = useSelector((state: RootState) => state.currentMenuTab);

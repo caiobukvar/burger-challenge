@@ -6,6 +6,7 @@ import MenuNavigation from "../components/MenuNavigation";
 import Menu from "../components/Menu";
 import { useEffect, useState } from "react";
 import { Venue } from "@/types/types";
+import MenuItemCheckout from "@/components/MenuItemCheckout";
 
 export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
@@ -41,7 +42,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className="flex min-h-screen flex-col relative">
       <Header venue={venueData} />
 
       {venueData && (
@@ -69,6 +70,8 @@ export default function Home() {
           View allergy information
         </button>
       </div>
+
+      <MenuItemCheckout venue={venueData} />
     </main>
   );
 }

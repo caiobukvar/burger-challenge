@@ -5,17 +5,21 @@ import { useEffect, useState } from "react";
 import ChevronUp from "../ChevronUp";
 import ChevronDown from "../ChevronDown";
 import "@/app/globals.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
 
 const Menu: React.FC<MenuProps> = ({ venue }) => {
+  const isCheckoutOpen = useSelector(
+    (state: RootState) => state.isMenuCheckoutOpen
+  );
   const currentTab = useSelector((state: RootState) => state.currentMenuTab);
   const [menuData, setMenuData] = useState<MenuType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const bgColor = venue?.webSettings.primaryColour;
+  const dispatch = useDispatch();
 
-  // Manage open/close state for sections
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
     {}
   );
@@ -80,6 +84,10 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
     }));
   };
 
+  const openMenuItemCheckout = (item: any) => {
+    dispatch(setIsMenuCheckoutOpen(true));
+  };
+
   return (
     <div>
       {loading && <p>Loading...</p>}
@@ -95,6 +103,7 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
             >
               <button
                 onClick={() => toggleSection(section.id)}
+                type="button"
                 className="flex justify-between h-[72px] items-center w-full"
               >
                 <p className="font-[500] text-[24px] text-[#121212]">
@@ -109,9 +118,11 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
               {openSections[section.id] && (
                 <div className="flex flex-col gap-8">
                   {section.items.map((item) => (
-                    <div
+                    <button
                       key={item.id}
-                      className="flex justify-between w-full gap-4 max-h-[84px]"
+                      type="button"
+                      className="flex justify-between w-full gap-4 max-h-[84px] text-start"
+                      onClick={() => openMenuItemCheckout(item)}
                     >
                       <div className="min-h-full ">
                         <p className="font-[500] text-[16px] text-[#121212]">
@@ -141,7 +152,7 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}

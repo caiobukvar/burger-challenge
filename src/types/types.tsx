@@ -99,3 +99,7 @@ export interface Section {
   id: number;
   name: string;
 }
+
+export interface CloseIconProps {
+  color: string;
+}
