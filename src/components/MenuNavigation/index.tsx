@@ -7,12 +7,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentMenuTab } from "@/store/reducers/menuTabReducer";
 import { RootState } from "@/store/store";
 import { MenuProps } from "@/types/types";
+import { useRef } from "react";
 
 const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
   const currentTab = useSelector((state: RootState) => state.currentMenuTab);
   const dispatch = useDispatch();
 
   const { primaryColour }: any = venue?.webSettings;
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <div className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] ">
@@ -23,7 +31,10 @@ const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
             ? { borderColor: primaryColour }
             : {}
         }
-        onClick={() => dispatch(setCurrentMenuTab("burgers"))}
+        onClick={() => {
+          dispatch(setCurrentMenuTab("burgers"));
+          scrollToSection("burgers");
+        }}
       >
         <div
           className="rounded-full p-[2px] border-2 border-transparent"
@@ -53,7 +64,10 @@ const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
             ? { borderColor: primaryColour }
             : {}
         }
-        onClick={() => dispatch(setCurrentMenuTab("drinks"))}
+        onClick={() => {
+          dispatch(setCurrentMenuTab("drinks"));
+          scrollToSection("drinks");
+        }}
       >
         <div
           className="rounded-full p-[2px] border-2 border-transparent"
@@ -83,7 +97,10 @@ const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
             ? { borderColor: primaryColour }
             : {}
         }
-        onClick={() => dispatch(setCurrentMenuTab("desserts"))}
+        onClick={() => {
+          dispatch(setCurrentMenuTab("desserts"));
+          scrollToSection("desserts");
+        }}
       >
         <div
           className="rounded-full p-[2px] border-2 border-transparent"

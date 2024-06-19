@@ -1,24 +1,24 @@
-"use client";
-import {
-  Menu as MenuType,
-  MenuProps,
-  SectionState,
-  Section,
-} from "@/types/types";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Menu as MenuType, MenuProps, Section } from "@/types/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ChevronUp from "../ChevronUp";
 import ChevronDown from "../ChevronDown";
 import "@/app/globals.css";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const Menu: React.FC<MenuProps> = ({ venue }) => {
-  const [menuData, setMenuData] = useState<MenuType | null>();
+  const currentTab = useSelector((state: RootState) => state.currentMenuTab);
+  const [menuData, setMenuData] = useState<MenuType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [openSections, setOpenSections] = useState<{ [key: number]: boolean }>(
+  const bgColor = venue?.webSettings.primaryColour;
+
+  // Manage open/close state for sections
+  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
     {}
   );
-  const bgColor = venue?.webSettings.primaryColour;
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -54,6 +54,25 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
     fetchVenueData();
   }, []);
 
+  useEffect(() => {
+    if (menuData) {
+      setOpenSections((prevOpenSections) => {
+        const updatedOpenSections: { [key: string]: boolean } = {
+          ...prevOpenSections,
+        };
+        menuData.sections.forEach((section) => {
+          if (currentTab.currentMenuTab === section.name.toLowerCase()) {
+            updatedOpenSections[section.id] = true;
+          } else {
+            updatedOpenSections[section.id] =
+              prevOpenSections[section.id] ?? false;
+          }
+        });
+        return updatedOpenSections;
+      });
+    }
+  }, [currentTab.currentMenuTab, menuData]);
+
   const toggleSection = (sectionId: number) => {
     setOpenSections((prevState) => ({
       ...prevState,
@@ -69,7 +88,11 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
       {menuData && (
         <div>
           {menuData.sections.map((section) => (
-            <section key={section.id} className="flex flex-col gap-8">
+            <section
+              key={section.id}
+              className="flex flex-col gap-8"
+              id={section.name.toLowerCase()}
+            >
               <button
                 onClick={() => toggleSection(section.id)}
                 className="flex justify-between h-[72px] items-center w-full"
