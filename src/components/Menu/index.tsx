@@ -1,23 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Menu as MenuType, MenuProps, Section } from "@/types/types";
+import "@/app/globals.css";
+import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
+import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
+import { RootState } from "@/store/store";
+import { MenuItem, MenuProps, Menu as MenuType, Section } from "@/types/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import ChevronUp from "../ChevronUp";
-import ChevronDown from "../ChevronDown";
-import "@/app/globals.css";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
+import ChevronDown from "../ChevronDown";
+import ChevronUp from "../ChevronUp";
+import MenuItemCheckout from "../MenuItemCheckout";
 
 const Menu: React.FC<MenuProps> = ({ venue }) => {
   const isCheckoutOpen = useSelector(
     (state: RootState) => state.isMenuCheckoutOpen
   );
   const currentTab = useSelector((state: RootState) => state.currentMenuTab);
+  const { selectedItem } = useSelector(
+    (state: RootState) => state.selectedItem
+  );
   const [menuData, setMenuData] = useState<MenuType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const bgColor = venue?.webSettings.primaryColour;
   const dispatch = useDispatch();
 
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
@@ -84,8 +88,14 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
     }));
   };
 
-  const openMenuItemCheckout = (item: any) => {
+  const openMenuItemCheckout = (item: MenuItem) => {
+    dispatch(setSelectedItem(item));
     dispatch(setIsMenuCheckoutOpen(true));
+  };
+
+  const closeMenuItemCheckout = () => {
+    dispatch(setSelectedItem(null));
+    dispatch(setIsMenuCheckoutOpen(false));
   };
 
   return (
@@ -104,15 +114,15 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
               <button
                 onClick={() => toggleSection(section.id)}
                 type="button"
-                className="flex justify-between h-[72px] items-center w-full"
+                className="flex justify-between h-[72px] items-end w-full"
               >
                 <p className="font-[500] text-[24px] text-[#121212]">
                   {section.name}
                 </p>
                 {openSections[section.id] ? (
-                  <ChevronUp color={bgColor} />
+                  <ChevronUp color={venue?.webSettings.primaryColour} />
                 ) : (
-                  <ChevronDown color={bgColor} />
+                  <ChevronDown color={venue?.webSettings.primaryColour} />
                 )}
               </button>
               {openSections[section.id] && (
@@ -138,7 +148,7 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
 
                       <div className="flex min-w-32 max-h-[84px] justify-center items-center">
                         {item.images && (
-                          <div>
+                          <div className="w-[128px] h-[84px]">
                             {item.images.map((image, index) => (
                               <Image
                                 src={image.image}
@@ -159,6 +169,14 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
             </section>
           ))}
         </div>
+      )}
+      {selectedItem && isCheckoutOpen.isMenuCheckoutOpen && (
+        <MenuItemCheckout
+          open={isCheckoutOpen.isMenuCheckoutOpen}
+          onClose={closeMenuItemCheckout}
+          venue={venue}
+          selectedItem={selectedItem}
+        />
       )}
     </div>
   );

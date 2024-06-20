@@ -1,12 +1,11 @@
 "use client";
 /* eslint-disable react/jsx-no-undef */
-import Header from "../components/Header";
-import MenuSearchInput from "../components/MenuSearchInput";
-import MenuNavigation from "../components/MenuNavigation";
-import Menu from "../components/Menu";
-import { useEffect, useState } from "react";
 import { Venue } from "@/types/types";
-import MenuItemCheckout from "@/components/MenuItemCheckout";
+import { useEffect, useState } from "react";
+import Header from "../components/Header";
+import Menu from "../components/Menu";
+import MenuNavigation from "../components/MenuNavigation";
+import MenuSearchInput from "../components/MenuSearchInput";
 
 export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
@@ -65,13 +64,12 @@ export default function Home() {
         {venueData && <MenuNavigation venue={venueData} />}
         {venueData && <Menu venue={venueData} />}
       </div>
+
       <div className="flex flex-col items-center w-full p-6 bg-[#EEEEEE] mt-4">
         <button className="text-center text-[#4F372F] bg-white rounded-[8px] w-full underline">
           View allergy information
         </button>
       </div>
-
-      <MenuItemCheckout venue={venueData} />
     </main>
   );
 }

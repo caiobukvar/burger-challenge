@@ -100,6 +100,58 @@ export interface Section {
   name: string;
 }
 
-export interface CloseIconProps {
+export interface CloseButtonProps {
   color: string;
+}
+
+export interface MenuItem {
+  id: number;
+  name: string;
+  description?: string | undefined;
+  alcoholic: number;
+  price: number;
+  position: number;
+  visible: number;
+  availabilityType: string;
+  sku: string;
+  modifiers?: MenuItemModifier[] | undefined;
+  images?: MenuItemImage[];
+  available: boolean;
+}
+
+export interface MenuItemModifier {
+  id: number;
+  name: string;
+  minChoices: number;
+  maxChoices: number;
+  items: MenuItemModifierItem[];
+}
+
+export interface MenuItemModifierItem {
+  id: number;
+  name: string;
+  price: number;
+  maxChoices: number;
+  position: number;
+  visible: number;
+  availabilityType: string;
+  available: boolean;
+  qty?: number;
+}
+
+export interface MenuItemImage {
+  id: number;
+  image: string;
+}
+
+export interface MenuItemCheckoutProps {
+  open: boolean;
+  onClose: () => void;
+  venue: Venue | null | undefined;
+  selectedItem: MenuItem;
+}
+
+export interface RootState {
+  selectedItem: MenuItem;
+  isMenuCheckoutOpen: { isMenuCheckoutOpen: boolean };
 }
