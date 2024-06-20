@@ -2,13 +2,13 @@ import Image from "next/image";
 import MenuIcon from "@/assets/images/menu-icon.svg";
 import { MenuProps } from "@/types/types";
 
-const Header: React.FC<MenuProps> = ({ venue }) => {
+const HeaderMobile: React.FC<MenuProps> = ({ venue }) => {
   const bgColor = venue?.webSettings?.navBackgroundColour;
 
   return (
     <div
       className="flex justify-between px-4 items-center min-w-full
-      h-16 text-white"
+      h-16 text-white md:hidden"
       style={bgColor ? { backgroundColor: bgColor } : {}}
     >
       <div className="size-[28px]" />
@@ -24,4 +24,4 @@ const Header: React.FC<MenuProps> = ({ venue }) => {
   );
 };
 
-export default Header;
+export default HeaderMobile;

@@ -2,11 +2,13 @@ import { RootState } from "@/store/store";
 import { MenuItemCheckoutProps } from "@/types/types";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CloseButton from "../CloseButton";
 import MinusBtn from "@/assets/images/minusButton.svg";
 import PlusBtn from "@/assets/images/plusButton.svg";
 import { useState } from "react";
+import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
+import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
 
 const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   venue,
@@ -15,10 +17,11 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   const isCheckoutOpen = useSelector(
     (state: RootState) => state.isMenuCheckoutOpen
   );
-  const [desiredAmount, setDesiredAmount] = useState(0);
+  const [desiredAmount, setDesiredAmount] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: number;
   }>({});
+  const dispatch = useDispatch();
 
   const handleAmount = (type: string) => {
     if (type === "minus") {
@@ -35,30 +38,40 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
       [modifierId]: itemId,
     }));
   };
-  console.log(selectedItem.modifiers?.map((modifier) => console.log(modifier)));
+
+  const handleClose = () => {
+    dispatch(setSelectedItem(null));
+    dispatch(setIsMenuCheckoutOpen(false));
+  };
 
   return (
     <Dialog.Root open={isCheckoutOpen.isMenuCheckoutOpen}>
-      <Dialog.Overlay className="fixed inset-0 bg-white" />
       <Dialog.Portal>
-        <Dialog.Content className="fixed inset-0 flex flex-col  ">
-          {selectedItem.images && selectedItem.images.length > 0 && (
-            <div>
-              {selectedItem.images.map((object) => (
-                <div
-                  style={{
-                    backgroundImage: `url(${object.image})`,
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                  }}
-                  key={object.id}
-                  className="rounded-md object-cover w-full h-64"
-                />
-              ))}
-            </div>
-          )}
+        <Dialog.Overlay className="fixed inset-0 md:bg-black/65 z-40" />
+        <Dialog.Content className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white shadow-lg w-full h-full md:h-auto md:max-w-[480px] overflow-y-auto relative">
+            <CloseButton
+              color={venue?.webSettings.primaryColour || "#000"}
+              onClick={handleClose}
+              className="absolute top-2 right-2"
+            />
 
-          <div className="">
+            {selectedItem.images && selectedItem.images.length > 0 && (
+              <div>
+                {selectedItem.images.map((object) => (
+                  <div
+                    key={object.id}
+                    style={{
+                      backgroundImage: `url(${object.image})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                    }}
+                    className="object-cover w-full h-64"
+                  />
+                ))}
+              </div>
+            )}
+
             <div className="p-4">
               <p className="text-[#121212] text-[24px] font-[700]">
                 {selectedItem.name}
@@ -73,8 +86,8 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
             {selectedItem.modifiers && (
               <div className="flex flex-col bg-[#F8F9FA]">
                 {selectedItem.modifiers.map((modifier) => (
-                  <>
-                    <div key={modifier.id} className="p-4">
+                  <div key={modifier.id}>
+                    <div className="p-4">
                       <p className="text-[#464646] text-[16px] font-[700]">
                         {modifier.name}
                       </p>
@@ -111,13 +124,13 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
                         </label>
                       ))}
                     </div>
-                  </>
+                  </div>
                 ))}
               </div>
             )}
 
             <div className="flex w-full flex-col items-center p-4 gap-[10px]">
-              <div className="flex gap-4 ">
+              <div className="flex gap-4">
                 <button
                   onClick={() => handleAmount("minus")}
                   className="flex items-center justify-center size-8 rounded-full bg-[#DADADA]"
@@ -136,14 +149,14 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
               </div>
 
               <button
-                className="py-1 px-6 rounded-[40px text-[18px]
-                text-white rounded-[40px] w-full font-[400]"
+                className="py-1 px-6 rounded-[40px] text-[18px]
+                  text-white w-full font-[400]"
                 style={{ backgroundColor: venue?.webSettings.primaryColour }}
               >
-                Add to order • R${selectedItem.price.toFixed(2)}
+                Add to order • R$
+                {(selectedItem.price * desiredAmount).toFixed(2)}
               </button>
             </div>
-            <CloseButton color={venue?.webSettings.primaryColour || "#000"} />
           </div>
         </Dialog.Content>
       </Dialog.Portal>

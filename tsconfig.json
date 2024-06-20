@@ -27,7 +27,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/components/Menu/index.jsx",
-    "src/components/Header/index.jsx",
+    "src/components/HeaderMobile/index.jsx",
     "src/components/ChevronUp/index.jsx",
     "src/store/reducers/menuItemCheckoutReducer.js"
   ],

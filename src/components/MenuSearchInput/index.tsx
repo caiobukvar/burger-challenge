@@ -3,7 +3,7 @@ import SearchIcon from "@/assets/images/search-icon.svg";
 
 export default function MenuSearchInput() {
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <div className="relative w-full mx-auto">
       <input
         type="text"
         name="search-menu"
