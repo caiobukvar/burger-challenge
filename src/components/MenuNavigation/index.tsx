@@ -22,7 +22,11 @@ const MenuNavigation: React.FC<MenuProps> = ({ venue }) => {
   };
 
   return (
-    <div className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] ">
+    <div
+      className="flex flex-row justify-center px-4 py-5 gap-3 items-center max-w-[375px] 
+    md:justify-start md:p-0
+    "
+    >
       <button
         className="flex flex-col items-center p-2 border-b-2 border-transparent"
         style={

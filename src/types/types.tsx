@@ -102,6 +102,8 @@ export interface Section {
 
 export interface CloseButtonProps {
   color: string;
+  className: string;
+  onClick: () => void;
 }
 
 export interface MenuItem {
