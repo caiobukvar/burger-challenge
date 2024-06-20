@@ -157,3 +157,14 @@ export interface RootState {
   selectedItem: MenuItem;
   isMenuCheckoutOpen: { isMenuCheckoutOpen: boolean };
 }
+
+export interface CartItem {
+  id: number;
+  name: string;
+  quantity: number;
+  modifiers: string[];
+}
+
+export interface CartState {
+  cartItems: CartItem[];
+}

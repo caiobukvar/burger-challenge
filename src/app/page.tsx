@@ -1,17 +1,21 @@
 "use client";
 /* eslint-disable react/jsx-no-undef */
-import { Venue } from "@/types/types";
+import { CartState, Venue } from "@/types/types";
 import { useEffect, useState } from "react";
 import Menu from "../components/Menu";
 import MenuNavigation from "../components/MenuNavigation";
 import MenuSearchInput from "../components/MenuSearchInput";
 import HeaderMobile from "../components/HeaderMobile";
 import HeaderDesktop from "../components/HeaderDesktop";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const cart = useSelector((state: CartState) => state.cartItems);
+  console.log(cart);
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -85,6 +89,8 @@ export default function Home() {
           View allergy information
         </button>
       </div>
+
+      {/* se carrinho tiver algo, renderizar aqui */}
     </main>
   );
 }
