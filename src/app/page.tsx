@@ -81,7 +81,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col items-center w-full p-6 bg-[#EEEEEE] mt-4 md:hidden">
-        <button className="text-center text-[#4F372F] bg-white rounded-[8px] w-full underline">
+        <button className="text-center text-[#4F372F] bg-white rounded-[8px] w-full underline font-[700]">
           View allergy information
         </button>
       </div>
