@@ -13,7 +13,6 @@ export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const dispatch = useDispatch();
   const cart = useSelector((state: CartState) => state.cartItems);
   console.log(cart);
 
@@ -46,7 +45,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col relative">
+    <main className="flex min-h-screen flex-col relative bg-[#EEEEEE]">
       <HeaderMobile venue={venueData} />
       <HeaderDesktop venue={venueData} />
 
@@ -61,7 +60,7 @@ export default function Home() {
         />
       )}
 
-      <div className="flex flex-col w-full p-4 max-w-screen-lg self-center gap-2 ">
+      <div className="flex flex-col w-full max-w-screen-lg self-center bg-[#fff] md:bg-[#EEEEEE] ">
         <MenuSearchInput />
 
         {loading && <p>Loading...</p>}
@@ -78,19 +77,34 @@ export default function Home() {
               <p>Carrinho</p>
             </div>
             <div className="bg-[#FFFFFF] h-16 p-4 text-[#464646] font-[400] flex items-center">
-              <p>Seu carrinho esta vazio</p>
+              {cart.length > 1 ? (
+                <p>
+                  {cart.map((item) => (
+                    <p key={item.id}>{item.name}</p>
+                  ))}
+                </p>
+              ) : (
+                <p>Seu carrinho esta vazio</p>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col items-center w-full p-6 bg-[#EEEEEE] mt-4 md:hidden">
+      <div className="flex flex-col items-center w-full p-6 bg-[#EEEEEE] md:hidden">
         <button className="text-center text-[#4F372F] bg-white rounded-[8px] w-full underline font-[700]">
           View allergy information
         </button>
       </div>
 
-      {/* se carrinho tiver algo, renderizar aqui */}
+      {cart.length > 0 && (
+        <div className="sticky bottom-0 p-4 backdrop-blur-lg backdrop-transparent">
+          <button className="text-center bg-[#4F372F] text-white rounded-[24px] w-full font-[700] h-[48px]">
+            Your basket •{" "}
+            {cart.length > 1 ? `${cart.length} items` : `${cart.length} item`}
+          </button>
+        </div>
+      )}
     </main>
   );
 }
