@@ -1,14 +1,15 @@
 import { RootState } from "@/store/store";
-import { MenuItemCheckoutProps } from "@/types/types";
+import { CartState, MenuItemCheckoutProps } from "@/types/types";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import CloseButton from "../CloseButton";
 import MinusBtn from "@/assets/images/minusButton.svg";
 import PlusBtn from "@/assets/images/plusButton.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
 import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
+import { addItem, updateItemModifiers } from "@/store/reducers/cartReducer";
 
 const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   venue,
@@ -17,21 +18,41 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   const isCheckoutOpen = useSelector(
     (state: RootState) => state.isMenuCheckoutOpen
   );
+  const cart = useSelector((state: CartState) => state.cartItems);
   const [desiredAmount, setDesiredAmount] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: number;
   }>({});
   const dispatch = useDispatch();
+  console.log(cart);
 
+  // Initialize the first checkbox for each modifier as selected
+  useEffect(() => {
+    if (selectedItem.modifiers) {
+      const initialSelectedOptions = selectedItem.modifiers.reduce(
+        (acc, modifier) => {
+          if (modifier.items.length > 0) {
+            acc[modifier.id] = modifier.items[0].id;
+          }
+          return acc;
+        },
+        {} as { [key: number]: number }
+      );
+      setSelectedOptions(initialSelectedOptions);
+    }
+  }, [selectedItem]);
+
+  // Handle the amount of items
   const handleAmount = (type: string) => {
     if (type === "minus") {
-      setDesiredAmount(desiredAmount <= 0 ? 0 : desiredAmount - 1);
+      setDesiredAmount(desiredAmount <= 1 ? 1 : desiredAmount - 1);
     }
     if (type === "plus") {
       setDesiredAmount(desiredAmount + 1);
     }
   };
 
+  // Handle the change of a modifier option
   const handleRadioChange = (modifierId: number, itemId: number) => {
     setSelectedOptions((prevState) => ({
       ...prevState,
@@ -39,6 +60,55 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     }));
   };
 
+  // Calculate the total price based on base item price and modifiers
+  const calculateTotalPrice = () => {
+    let totalPrice = selectedItem.price;
+
+    Object.keys(selectedOptions).forEach((modifierIdString) => {
+      const modifierId = Number(modifierIdString);
+      const modifier = selectedItem.modifiers?.find((m) => m.id === modifierId);
+
+      if (modifier) {
+        const selectedItem = modifier.items.find(
+          (item) => item.id === selectedOptions[modifierId]
+        );
+        if (selectedItem) {
+          totalPrice += selectedItem.price;
+        }
+      }
+    });
+
+    return (totalPrice * desiredAmount).toFixed(2);
+  };
+
+  // Handle the Add to Order button click
+  const handleAddToOrder = () => {
+    const itemExistsInCart = cart.find((item) => item.id === selectedItem.id);
+
+    if (itemExistsInCart) {
+      // Update existing item modifiers
+      dispatch(
+        updateItemModifiers({
+          id: selectedItem.id,
+          modifiers: selectedOptions,
+        })
+      );
+    } else {
+      // Add new item to the cart
+      dispatch(
+        addItem({
+          id: selectedItem.id,
+          name: selectedItem.name,
+          price: parseFloat(calculateTotalPrice()),
+          quantity: desiredAmount,
+          modifiers: selectedOptions,
+        })
+      );
+    }
+    handleClose();
+  };
+
+  // Handle closing the checkout dialog
   const handleClose = () => {
     dispatch(setSelectedItem(null));
     dispatch(setIsMenuCheckoutOpen(false));
@@ -149,12 +219,12 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
               </div>
 
               <button
+                onClick={handleAddToOrder}
                 className="py-1 px-6 rounded-[40px] text-[18px]
                   text-white w-full font-[400]"
                 style={{ backgroundColor: venue?.webSettings.primaryColour }}
               >
-                Add to order • R$
-                {(selectedItem.price * desiredAmount).toFixed(2)}
+                Add to order • R${calculateTotalPrice()}
               </button>
             </div>
           </div>
