@@ -1,23 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  cartItems: [],
-};
+const initialState = [];
 
 const cartSlice = createSlice({
-  name: "cartItems",
+  name: "cart",
   initialState,
   reducers: {
     addItem(state, action) {
       const { id, name, quantity, modifiers } = action.payload;
-      const existingItemIndex = state.cartItems.findIndex(
-        (item) => item.id === id
-      );
+      const existingItem = state.find((item) => item.id === id);
 
-      if (existingItemIndex !== -1) {
-        state.cartItems[existingItemIndex].quantity += quantity;
+      if (existingItem) {
+        existingItem.quantity += quantity;
+        existingItem.modifiers = modifiers;
       } else {
-        state.cartItems.push({
+        state.push({
           id,
           name,
           quantity,
@@ -25,26 +22,26 @@ const cartSlice = createSlice({
         });
       }
     },
-    removeItem(state, action) {
-      const { id } = action.payload;
-      state.cartItems = state.cartItems.filter((item) => item.id !== id);
-    },
-    updateItemQuantity(state, action) {
-      const { id, quantity } = action.payload;
-      const itemToUpdate = state.cartItems.find((item) => item.id === id);
-      if (itemToUpdate) {
-        itemToUpdate.quantity = quantity;
-      }
-    },
     updateItemModifiers(state, action) {
       const { id, modifiers } = action.payload;
-      const itemToUpdate = state.cartItems.find((item) => item.id === id);
+      const itemToUpdate = state.find((item) => item.id === id);
       if (itemToUpdate) {
         itemToUpdate.modifiers = modifiers;
       }
     },
+    removeItem(state, action) {
+      const { id } = action.payload;
+      state = state.filter((item) => item.id !== id);
+    },
+    updateItemQuantity(state, action) {
+      const { id, quantity } = action.payload;
+      const itemToUpdate = state.find((item) => item.id === id);
+      if (itemToUpdate) {
+        itemToUpdate.quantity = quantity;
+      }
+    },
     clearCart(state) {
-      state.cartItems = [];
+      state = [];
     },
   },
 });
@@ -56,4 +53,5 @@ export const {
   updateItemModifiers,
   clearCart,
 } = cartSlice.actions;
+
 export default cartSlice.reducer;

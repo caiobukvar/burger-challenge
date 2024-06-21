@@ -106,7 +106,7 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
   };
 
   const getItemInCart = (itemId: number): CartItem | undefined => {
-    return cart.cartItems.find((item: CartItem) => item.id === itemId);
+    return cart.find((item: CartItem) => item.id === itemId);
   };
 
   return (
@@ -152,15 +152,24 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
                         onClick={() => openMenuItemCheckout(item)}
                       >
                         <div className="min-h-full flex items-center gap-4">
-                          {itemInCart && (
-                            <div className="bg-[#FF0000] text-white rounded-full px-2 py-1 text-sm">
-                              {itemInCart.quantity}
-                            </div>
-                          )}
                           <div>
-                            <p className="font-[500] text-[16px] text-[#121212]">
-                              {item.name}
-                            </p>
+                            <div className="flex gap-2 items-center">
+                              {itemInCart && (
+                                <div
+                                  className="text-white font-[500] rounded-[5px] w-[18px] h-[18px] text-[14px] text-center"
+                                  style={{
+                                    backgroundColor:
+                                      venue?.webSettings.primaryColour ||
+                                      "#000",
+                                  }}
+                                >
+                                  {itemInCart.quantity}
+                                </div>
+                              )}
+                              <p className="font-[500] text-[16px] text-[#121212]">
+                                {item.name}
+                              </p>
+                            </div>
                             <p className="font-[300] text-[16px] text-[#464646] line-clamp-2 leading-[18.75px]">
                               {item.description}
                             </p>

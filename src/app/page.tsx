@@ -13,8 +13,8 @@ export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const cart = useSelector((state: RootState) => state.cartItems);
-  console.log(`cart`, cart);
+  const cartItems = useSelector((state: RootState) => state.cartItems);
+  console.log(cartItems);
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -77,12 +77,12 @@ export default function Home() {
               <p>Carrinho</p>
             </div>
             <div className="bg-[#FFFFFF] h-16 p-4 text-[#464646] font-[400] flex items-center">
-              {cart.length > 0 ? (
-                <p>
-                  {cart.map((item) => (
+              {cartItems.length > 0 ? (
+                <div>
+                  {cartItems.map((item) => (
                     <p key={item.id}>{item.name}</p>
                   ))}
-                </p>
+                </div>
               ) : (
                 <p>Seu carrinho esta vazio</p>
               )}
@@ -97,11 +97,13 @@ export default function Home() {
         </button>
       </div>
 
-      {cart.length > 0 && (
+      {cartItems.length > 0 && (
         <div className="sticky bottom-0 p-4 backdrop-blur-lg backdrop-transparent">
           <button className="text-center bg-[#4F372F] text-white rounded-[24px] w-full font-[700] h-[48px]">
             Your basket •{" "}
-            {cart.length > 0 ? `${cart.length} items` : `${cart.length} item`}
+            {cartItems.length > 1
+              ? `${cartItems.length} items`
+              : `${cartItems.length} item`}
           </button>
         </div>
       )}

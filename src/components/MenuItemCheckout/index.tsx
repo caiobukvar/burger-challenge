@@ -1,8 +1,10 @@
 import MinusBtn from "@/assets/images/minusButton.svg";
 import PlusBtn from "@/assets/images/plusButton.svg";
-import { addItem, updateItemModifiers } from "@/store/reducers/cartReducer";
-import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
-import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
+import {
+  addItem,
+  updateItemModifiers,
+  updateItemQuantity,
+} from "@/store/reducers/cartReducer";
 import { RootState } from "@/store/store";
 import { CartItem, MenuItemCheckoutProps } from "@/types/types";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -14,6 +16,7 @@ import CloseButton from "../CloseButton";
 const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   venue,
   selectedItem,
+  onClose,
 }) => {
   const isCheckoutOpen = useSelector(
     (state: RootState) => state.isMenuCheckoutOpen.isMenuCheckoutOpen
@@ -80,15 +83,21 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   };
 
   const handleAddToOrder = () => {
-    const itemExistsInCart = cart.cartItems.find(
+    const itemExistsInCart = cart.find(
       (item: CartItem) => item.id === selectedItem.id
-    );
+    ) as CartItem | undefined;
 
     if (itemExistsInCart) {
       dispatch(
         updateItemModifiers({
           id: selectedItem.id,
           modifiers: selectedOptions,
+        })
+      );
+      dispatch(
+        updateItemQuantity({
+          id: selectedItem.id,
+          quantity: itemExistsInCart.quantity + desiredAmount,
         })
       );
     } else {
@@ -102,12 +111,7 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
         })
       );
     }
-    handleClose();
-  };
-
-  const handleClose = () => {
-    dispatch(setSelectedItem(null));
-    dispatch(setIsMenuCheckoutOpen(false));
+    onClose();
   };
 
   return (
@@ -118,7 +122,7 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
           <div className="bg-white shadow-lg w-full h-full md:h-auto md:max-w-[480px] overflow-y-auto relative">
             <CloseButton
               color={venue?.webSettings.primaryColour || "#000"}
-              onClick={handleClose}
+              onClick={onClose}
               className="absolute top-2 right-2"
             />
 
@@ -216,7 +220,7 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
 
               <button
                 onClick={handleAddToOrder}
-                className="py-1 px-6 rounded-[40px] text-[18px] text-white w-full font-[400]"
+                className="py-1 px-6 rounded-[40px] text-[18px] text-white w-full font-[400] "
                 style={{ backgroundColor: venue?.webSettings.primaryColour }}
               >
                 Add to order • R${calculateTotalPrice()}

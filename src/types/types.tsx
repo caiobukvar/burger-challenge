@@ -157,7 +157,7 @@ export interface CartItem {
   id: number;
   name: string;
   quantity: number;
-  modifiers: any[];
+  modifiers?: MenuItemModifier[] | undefined;
 }
 
 export interface RootState {
