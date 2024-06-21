@@ -150,21 +150,18 @@ export interface MenuItemCheckoutProps {
   open: boolean;
   onClose: () => void;
   venue: Venue | null | undefined;
-  selectedItem: MenuItem;
-}
-
-export interface RootState {
-  selectedItem: MenuItem;
-  isMenuCheckoutOpen: { isMenuCheckoutOpen: boolean };
+  selectedItem: MenuItem | null;
 }
 
 export interface CartItem {
   id: number;
   name: string;
   quantity: number;
-  modifiers: string[];
+  modifiers: any[];
 }
 
-export interface CartState {
+export interface RootState {
+  selectedItem: MenuItem;
+  isMenuCheckoutOpen: { isMenuCheckoutOpen: boolean };
   cartItems: CartItem[];
 }

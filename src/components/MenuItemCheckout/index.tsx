@@ -1,35 +1,33 @@
-import { RootState } from "@/store/store";
-import { CartState, MenuItemCheckoutProps } from "@/types/types";
-import * as Dialog from "@radix-ui/react-dialog";
-import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
-import CloseButton from "../CloseButton";
 import MinusBtn from "@/assets/images/minusButton.svg";
 import PlusBtn from "@/assets/images/plusButton.svg";
-import { useState, useEffect } from "react";
-import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
-import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
 import { addItem, updateItemModifiers } from "@/store/reducers/cartReducer";
+import { setIsMenuCheckoutOpen } from "@/store/reducers/menuCheckoutReducer";
+import { setSelectedItem } from "@/store/reducers/menuItemCheckoutReducer";
+import { RootState } from "@/store/store";
+import { CartItem, MenuItemCheckoutProps } from "@/types/types";
+import * as Dialog from "@radix-ui/react-dialog";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import CloseButton from "../CloseButton";
 
 const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
   venue,
   selectedItem,
 }) => {
   const isCheckoutOpen = useSelector(
-    (state: RootState) => state.isMenuCheckoutOpen
+    (state: RootState) => state.isMenuCheckoutOpen.isMenuCheckoutOpen
   );
-  const cart = useSelector((state: CartState) => state.cartItems);
+  const cart = useSelector((state: RootState) => state.cartItems);
   const [desiredAmount, setDesiredAmount] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: number;
   }>({});
   const dispatch = useDispatch();
-  console.log(cart);
 
-  // Initialize the first checkbox for each modifier as selected
   useEffect(() => {
-    if (selectedItem.modifiers) {
-      const initialSelectedOptions = selectedItem.modifiers.reduce(
+    if (selectedItem?.modifiers) {
+      const initialSelectedOptions = selectedItem?.modifiers.reduce(
         (acc, modifier) => {
           if (modifier.items.length > 0) {
             acc[modifier.id] = modifier.items[0].id;
@@ -42,17 +40,18 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     }
   }, [selectedItem]);
 
-  // Handle the amount of items
-  const handleAmount = (type: string) => {
+  if (!selectedItem) {
+    return null;
+  }
+
+  const handleAmount = (type: "minus" | "plus") => {
     if (type === "minus") {
-      setDesiredAmount(desiredAmount <= 1 ? 1 : desiredAmount - 1);
-    }
-    if (type === "plus") {
-      setDesiredAmount(desiredAmount + 1);
+      setDesiredAmount((prev) => Math.max(1, prev - 1));
+    } else if (type === "plus") {
+      setDesiredAmount((prev) => prev + 1);
     }
   };
 
-  // Handle the change of a modifier option
   const handleRadioChange = (modifierId: number, itemId: number) => {
     setSelectedOptions((prevState) => ({
       ...prevState,
@@ -60,7 +59,6 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     }));
   };
 
-  // Calculate the total price based on base item price and modifiers
   const calculateTotalPrice = () => {
     let totalPrice = selectedItem.price;
 
@@ -81,12 +79,12 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     return (totalPrice * desiredAmount).toFixed(2);
   };
 
-  // Handle the Add to Order button click
   const handleAddToOrder = () => {
-    const itemExistsInCart = cart.find((item) => item.id === selectedItem.id);
+    const itemExistsInCart = cart.cartItems.find(
+      (item: CartItem) => item.id === selectedItem.id
+    );
 
     if (itemExistsInCart) {
-      // Update existing item modifiers
       dispatch(
         updateItemModifiers({
           id: selectedItem.id,
@@ -94,7 +92,6 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
         })
       );
     } else {
-      // Add new item to the cart
       dispatch(
         addItem({
           id: selectedItem.id,
@@ -108,14 +105,13 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     handleClose();
   };
 
-  // Handle closing the checkout dialog
   const handleClose = () => {
     dispatch(setSelectedItem(null));
     dispatch(setIsMenuCheckoutOpen(false));
   };
 
   return (
-    <Dialog.Root open={isCheckoutOpen.isMenuCheckoutOpen}>
+    <Dialog.Root open={isCheckoutOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 md:bg-black/65 z-40" />
         <Dialog.Content className="fixed inset-0 flex items-center justify-center z-50">
@@ -220,8 +216,7 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
 
               <button
                 onClick={handleAddToOrder}
-                className="py-1 px-6 rounded-[40px] text-[18px]
-                  text-white w-full font-[400]"
+                className="py-1 px-6 rounded-[40px] text-[18px] text-white w-full font-[400]"
                 style={{ backgroundColor: venue?.webSettings.primaryColour }}
               >
                 Add to order • R${calculateTotalPrice()}

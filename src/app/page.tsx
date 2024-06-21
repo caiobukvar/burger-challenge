@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable react/jsx-no-undef */
-import { CartState, Venue } from "@/types/types";
+import { CartItem, RootState, Venue } from "@/types/types";
 import { useEffect, useState } from "react";
 import Menu from "../components/Menu";
 import MenuNavigation from "../components/MenuNavigation";
@@ -13,8 +13,8 @@ export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const cart = useSelector((state: CartState) => state.cartItems);
-  console.log(cart);
+  const cart = useSelector((state: RootState) => state.cartItems);
+  console.log(`cart`, cart);
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -77,7 +77,7 @@ export default function Home() {
               <p>Carrinho</p>
             </div>
             <div className="bg-[#FFFFFF] h-16 p-4 text-[#464646] font-[400] flex items-center">
-              {cart.length > 1 ? (
+              {cart.length > 0 ? (
                 <p>
                   {cart.map((item) => (
                     <p key={item.id}>{item.name}</p>
@@ -101,7 +101,7 @@ export default function Home() {
         <div className="sticky bottom-0 p-4 backdrop-blur-lg backdrop-transparent">
           <button className="text-center bg-[#4F372F] text-white rounded-[24px] w-full font-[700] h-[48px]">
             Your basket •{" "}
-            {cart.length > 1 ? `${cart.length} items` : `${cart.length} item`}
+            {cart.length > 0 ? `${cart.length} items` : `${cart.length} item`}
           </button>
         </div>
       )}
