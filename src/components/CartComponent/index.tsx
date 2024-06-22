@@ -93,14 +93,14 @@ const CartComponent: React.FC<CartComponentProps> = ({
             ))}
           </div>
 
-          <div className="flex flex-col w-full px-4 ">
+          <div className="flex flex-col w-full px-4  ">
             <div className="flex justify-between w-full py-4">
               <p className="text-[#121212]">Sub total</p>
               <p className="text-[#121212] font-[500]">
                 R${calculateFinalPrice()}
               </p>
             </div>
-            <div className="flex justify-between w-full py-3">
+            <div className="flex justify-between w-full py-3 border-t-[1px] border-[#DADADA]">
               <p className="text-[#121212] text-[24px] font-[300]">Total:</p>
               <p className="text-[#121212]  text-[24px] font-[700]">
                 R${calculateFinalPrice()}
