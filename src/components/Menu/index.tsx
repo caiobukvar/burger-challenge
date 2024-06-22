@@ -35,6 +35,8 @@ const Menu: React.FC<MenuProps> = ({ venue }) => {
     {}
   );
 
+  console.log("cart", cart);
+
   useEffect(() => {
     const fetchVenueData = async () => {
       try {

@@ -8,13 +8,15 @@ import MenuSearchInput from "../components/MenuSearchInput";
 import HeaderMobile from "../components/HeaderMobile";
 import HeaderDesktop from "../components/HeaderDesktop";
 import { useDispatch, useSelector } from "react-redux";
+import CartComponent from "@/components/CartComponent";
+import { setIsCartOpen } from "@/store/reducers/cartComponentOpenerReducer";
 
 export default function Home() {
   const [venueData, setVenueData] = useState<Venue | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const cartItems = useSelector((state: RootState) => state.cartItems);
-  console.log(cartItems);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchVenueData = async () => {
@@ -43,6 +45,14 @@ export default function Home() {
 
     fetchVenueData();
   }, []);
+
+  const openCart = () => {
+    dispatch(setIsCartOpen(true));
+  };
+
+  const closeCart = () => {
+    dispatch(setIsCartOpen(false));
+  };
 
   return (
     <main className="flex min-h-screen flex-col relative bg-[#EEEEEE]">
@@ -98,8 +108,11 @@ export default function Home() {
       </div>
 
       {cartItems.length > 0 && (
-        <div className="sticky bottom-0 p-4 backdrop-blur-lg backdrop-transparent">
-          <button className="text-center bg-[#4F372F] text-white rounded-[24px] w-full font-[700] h-[48px]">
+        <div className="sticky bottom-0 p-4 backdrop-blur-lg backdrop-transparent md:hidden">
+          <button
+            className="text-center bg-[#4F372F] text-white rounded-[24px] w-full font-[700] h-[48px]"
+            onClick={openCart}
+          >
             Your basket •{" "}
             {cartItems.length > 1
               ? `${cartItems.length} items`
@@ -107,6 +120,12 @@ export default function Home() {
           </button>
         </div>
       )}
+
+      <CartComponent
+        venue={venueData}
+        onClose={closeCart}
+        cartItems={cartItems}
+      />
     </main>
   );
 }

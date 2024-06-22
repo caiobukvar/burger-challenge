@@ -127,6 +127,7 @@ export interface MenuItemModifier {
   minChoices: number;
   maxChoices: number;
   items: MenuItemModifierItem[];
+  selectedItem: any;
 }
 
 export interface MenuItemModifierItem {
@@ -158,10 +159,17 @@ export interface CartItem {
   name: string;
   quantity: number;
   modifiers?: MenuItemModifier[] | undefined;
+  price: number;
 }
 
 export interface RootState {
   selectedItem: MenuItem;
   isMenuCheckoutOpen: { isMenuCheckoutOpen: boolean };
+  cartItems: CartItem[];
+}
+
+export interface CartComponentProps {
+  venue: Venue | null | undefined;
+  onClose: () => void;
   cartItems: CartItem[];
 }

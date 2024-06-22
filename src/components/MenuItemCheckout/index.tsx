@@ -3,6 +3,7 @@ import PlusBtn from "@/assets/images/plusButton.svg";
 import {
   addItem,
   updateItemModifiers,
+  updateItemPrice,
   updateItemQuantity,
 } from "@/store/reducers/cartReducer";
 import { RootState } from "@/store/store";
@@ -62,42 +63,78 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     }));
   };
 
-  const calculateTotalPrice = () => {
-    let totalPrice = selectedItem.price;
+  const mapSelectedOptionsToFullDetails = () => {
+    if (!selectedItem?.modifiers) return {};
 
-    Object.keys(selectedOptions).forEach((modifierIdString) => {
-      const modifierId = Number(modifierIdString);
-      const modifier = selectedItem.modifiers?.find((m) => m.id === modifierId);
-
-      if (modifier) {
-        const selectedItem = modifier.items.find(
-          (item) => item.id === selectedOptions[modifierId]
-        );
-        if (selectedItem) {
-          totalPrice += selectedItem.price;
-        }
+    return selectedItem.modifiers.reduce((acc, modifier) => {
+      const selectedItemId = selectedOptions[modifier.id];
+      const selectedModifierItem = modifier.items.find(
+        (item) => item.id === selectedItemId
+      );
+      if (selectedModifierItem) {
+        acc[modifier.id] = {
+          ...modifier,
+          selectedItem: selectedModifierItem,
+        };
       }
-    });
+      return acc;
+    }, {} as { [key: number]: { name: string; selectedItem: { id: number; name: string; price: number } } });
+  };
 
-    return (totalPrice * desiredAmount).toFixed(2);
+  const calculateTotalPrice = () => {
+    let totalPrice = selectedItem.price * desiredAmount;
+
+    if (selectedItem.modifiers) {
+      Object.keys(selectedOptions).forEach((modifierIdString) => {
+        const modifierId = Number(modifierIdString);
+        const modifier = selectedItem.modifiers?.find(
+          (m) => m.id === modifierId
+        );
+
+        if (modifier) {
+          const selectedItem = modifier.items.find(
+            (item) => item.id === selectedOptions[modifierId]
+          );
+          if (selectedItem) {
+            totalPrice += selectedItem.price;
+          }
+        }
+      });
+    }
+
+    return totalPrice.toFixed(2);
   };
 
   const handleAddToOrder = () => {
+    const totalPriceToAdd = parseFloat(calculateTotalPrice());
+    const fullModifiers = mapSelectedOptionsToFullDetails();
+
     const itemExistsInCart = cart.find(
       (item: CartItem) => item.id === selectedItem.id
     ) as CartItem | undefined;
 
     if (itemExistsInCart) {
-      dispatch(
-        updateItemModifiers({
-          id: selectedItem.id,
-          modifiers: selectedOptions,
-        })
-      );
+      const updatedQuantity = itemExistsInCart.quantity + desiredAmount;
+      const updatedPrice = itemExistsInCart.price + totalPriceToAdd;
+
       dispatch(
         updateItemQuantity({
           id: selectedItem.id,
-          quantity: itemExistsInCart.quantity + desiredAmount,
+          quantity: updatedQuantity,
+        })
+      );
+
+      dispatch(
+        updateItemModifiers({
+          id: selectedItem.id,
+          modifiers: fullModifiers,
+        })
+      );
+
+      dispatch(
+        updateItemPrice({
+          id: selectedItem.id,
+          price: updatedPrice,
         })
       );
     } else {
@@ -105,15 +142,17 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
         addItem({
           id: selectedItem.id,
           name: selectedItem.name,
-          price: parseFloat(calculateTotalPrice()),
+          price: totalPriceToAdd,
           quantity: desiredAmount,
-          modifiers: selectedOptions,
+          modifiers: fullModifiers,
         })
       );
     }
+
     onClose();
   };
 
+  console.log("selectedItem", selectedItem);
   return (
     <Dialog.Root open={isCheckoutOpen}>
       <Dialog.Portal>
@@ -220,7 +259,7 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
 
               <button
                 onClick={handleAddToOrder}
-                className="py-1 px-6 rounded-[40px] text-[18px] text-white w-full font-[400] "
+                className="py-1 px-6 rounded-[40px] text-[18px] text-white w-full font-[400]"
                 style={{ backgroundColor: venue?.webSettings.primaryColour }}
               >
                 Add to order • R${calculateTotalPrice()}

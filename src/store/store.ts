@@ -3,6 +3,7 @@ import menuTabReducer from "./reducers/menuTabReducer";
 import menuCheckoutReducer from "./reducers/menuCheckoutReducer";
 import menuItemCheckoutReducer from "./reducers/menuItemCheckoutReducer";
 import cartReducer from "./reducers/cartReducer";
+import cartComponentOpenerReducer from "./reducers/cartComponentOpenerReducer";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     isMenuCheckoutOpen: menuCheckoutReducer,
     selectedItem: menuItemCheckoutReducer,
     cartItems: cartReducer,
+    isCartOpen: cartComponentOpenerReducer,
   },
 });
 
