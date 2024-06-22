@@ -1,12 +1,15 @@
+"use client";
 import { RootState } from "@/store/store";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CloseButton from "../CloseButton";
 import { CartComponentProps, Venue } from "@/types/types";
 import CloseIcon from "@/assets/images/close-icon.svg";
 import Image from "next/image";
 import MinusBtn from "@/assets/images/minusButton.svg";
 import PlusBtn from "@/assets/images/plusButton.svg";
+import { removeItem, updateItemQuantity } from "@/store/reducers/cartReducer";
+import { useEffect } from "react";
 
 const CartComponent: React.FC<CartComponentProps> = ({
   venue,
@@ -16,7 +19,8 @@ const CartComponent: React.FC<CartComponentProps> = ({
   const isCartOpen = useSelector(
     (state: RootState) => state.isCartOpen.isCartOpen
   );
-  console.log("cartItems on checkout", cartItems);
+  const cart = useSelector((state: RootState) => state.cartItems);
+  const dispatch = useDispatch();
 
   const calculateFinalPrice = () => {
     let totalPrice = 0;
@@ -27,6 +31,34 @@ const CartComponent: React.FC<CartComponentProps> = ({
 
     return totalPrice.toFixed(2);
   };
+
+  const handleQuantityChange = (
+    itemId: number,
+    type: "increase" | "decrease"
+  ) => {
+    const currentItem = cartItems.find((item) => item.id === itemId);
+    if (!currentItem) return;
+
+    if (type === "decrease") {
+      if (currentItem.quantity > 1) {
+        dispatch(
+          updateItemQuantity({ id: itemId, quantity: currentItem.quantity - 1 })
+        );
+      } else {
+        dispatch(removeItem({ id: itemId }));
+      }
+    } else if (type === "increase") {
+      dispatch(
+        updateItemQuantity({ id: itemId, quantity: currentItem.quantity + 1 })
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      onClose();
+    }
+  }, [cart, onClose]);
 
   return (
     <Dialog.Root open={isCartOpen}>
@@ -75,15 +107,15 @@ const CartComponent: React.FC<CartComponentProps> = ({
                   )}
                   <div className="flex gap-4 mt-2">
                     <button
-                      // onClick={() => handleCart("minus")}
                       className="flex items-center justify-center size-5 rounded-full bg-[#DADADA]"
+                      onClick={() => handleQuantityChange(item.id, "decrease")}
                     >
                       <Image src={MinusBtn} alt="minus" height={8} width={8} />
                     </button>
                     <p>{item.quantity}</p>
                     <button
-                      // onClick={() => handleCart("plus")}
                       className="flex items-center justify-center size-5 rounded-full bg-[#4F372F]"
+                      onClick={() => handleQuantityChange(item.id, "increase")}
                     >
                       <Image src={PlusBtn} alt="plus" height={8} width={8} />
                     </button>

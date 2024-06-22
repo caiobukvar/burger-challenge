@@ -18,22 +18,22 @@ const cartSlice = createSlice({
         state.push(action.payload);
       }
     },
-    updateItemModifiers(state, action) {
-      const { id, modifiers } = action.payload;
+    updateItemQuantity(state, action) {
+      const { id, quantity } = action.payload;
       const itemToUpdate = state.find((item) => item.id === id);
       if (itemToUpdate) {
-        itemToUpdate.modifiers = modifiers;
+        itemToUpdate.quantity = quantity;
       }
     },
     removeItem(state, action) {
       const { id } = action.payload;
       return state.filter((item) => item.id !== id);
     },
-    updateItemQuantity(state, action) {
-      const { id, quantity } = action.payload;
+    updateItemModifiers(state, action) {
+      const { id, modifiers } = action.payload;
       const itemToUpdate = state.find((item) => item.id === id);
       if (itemToUpdate) {
-        itemToUpdate.quantity = quantity;
+        itemToUpdate.modifiers = modifiers;
       }
     },
     updateItemPrice(state, action) {
