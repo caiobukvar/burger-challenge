@@ -39,24 +39,12 @@ export interface Image {
   id: number;
   image: string;
 }
-export interface ModifierItem {
-  id: number;
-  name: string;
-  price: number;
-  maxChoices: number;
-  position: number;
-  visible: number;
-  availabilityType: string;
-  qty?: number;
-  available: boolean;
-}
-
 export interface Modifier {
   id: number;
   name: string;
   minChoices: number;
   maxChoices: number;
-  items: ModifierItem[];
+  items: Item[];
 }
 
 export interface Item {
@@ -126,8 +114,8 @@ export interface MenuItemModifier {
   name: string;
   minChoices: number;
   maxChoices: number;
-  items: MenuItemModifierItem[];
-  selectedItem: any;
+  items: MenuItem[];
+  selectedItem?: any;
 }
 
 export interface MenuItemModifierItem {
