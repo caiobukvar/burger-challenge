@@ -1,6 +1,5 @@
 "use client";
-/* eslint-disable react/jsx-no-undef */
-import { CartItem, RootState, Venue } from "@/types/types";
+import { RootState, Venue } from "@/types/types";
 import { useEffect, useState } from "react";
 import Menu from "../components/Menu";
 import MenuNavigation from "../components/MenuNavigation";
@@ -82,12 +81,21 @@ export default function Home() {
             {venueData && <Menu venue={venueData} />}
           </div>
 
-          <div className="hidden md:flex w-[320px] flex-col shadow-lg h-full">
-            <CartMobileComponent
-              venue={venueData}
-              onClose={closeCart}
-              cartItems={cartItems}
-            />
+          <div className="hidden md:flex w-[320px] flex-col drop-shadow-lg h-full">
+            <div className="bg-[#F8F9FA] h-16 p-4 flex items-center text-[#464646] font-[500] text-[24px]">
+              <p>Carrinho</p>
+            </div>
+            <div className="bg-[#FFFFFF] h-16 p-4 text-[#464646] font-[400] flex items-center">
+              {cartItems.length > 0 ? (
+                <div>
+                  {cartItems.map((item) => (
+                    <p key={item.id}>{item.name}</p>
+                  ))}
+                </div>
+              ) : (
+                <p>Seu carrinho esta vazio</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -111,6 +119,12 @@ export default function Home() {
           </button>
         </div>
       )}
+
+      <CartMobileComponent
+        venue={venueData}
+        onClose={closeCart}
+        cartItems={cartItems}
+      />
     </main>
   );
 }

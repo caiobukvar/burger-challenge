@@ -152,7 +152,6 @@ const MenuItemCheckout: React.FC<MenuItemCheckoutProps> = ({
     onClose();
   };
 
-  console.log("selectedItem", selectedItem);
   return (
     <Dialog.Root open={isCheckoutOpen}>
       <Dialog.Portal>
