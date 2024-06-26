@@ -22,11 +22,9 @@ export default function Home() {
     const fetchVenueData = async () => {
       try {
         setLoading(true);
-        const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-        const API_URL = "https://cdn-dev.preoday.com/challenge/venue/9";
-
-        const response = await fetch(PROXY_URL + API_URL);
-        console.log("Response Status:", response.status);
+        const response = await fetch(
+          `https://cdn-dev.preoday.com/challenge/venue/9`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
